@@ -14,11 +14,6 @@ This is a text editor written in python using customtkinter package.
 - Save your file 
 - Enable auto save
 
-## Screenshots
-
-![App Screenshot](https://i.imgur.com/FH9kWaV.png)
-
-
 ## Installation
 
 Install customtkinter with pip and run the program
@@ -33,3 +28,7 @@ Install customtkinter with pip and run the program
 
 - [@VasseDev](https://www.github.com/VasseDev)
 - [@MarveDev](https://www.github.com/MarveDev)
+
+## Screenshots
+
+![App Screenshot](https://i.imgur.com/FH9kWaV.png)
