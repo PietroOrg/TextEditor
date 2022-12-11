@@ -27,7 +27,7 @@ Install customtkinter with pip and run the program
 ## Authors
 
 - [@VasseDev](https://www.github.com/VasseDev)
-- [@MarveDev](https://www.github.com/MarveDev)
+- [@MarveeDev](https://www.github.com/MarveeDev)
 
 ## Screenshots
 
