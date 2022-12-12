@@ -1,10 +1,8 @@
-import contextlib
 import tkinter
 import tkinter.messagebox
 import customtkinter
 import pyautogui
 import tkinter.filedialog as fd
-import tkinter.messagebox as showinfo
 from PIL import Image
 
 # Modes: 'System' (standard), 'Dark', 'Light'
@@ -263,7 +261,9 @@ class App(customtkinter.CTk):
             f.close()
 
     def ask_save_file(self, *args) -> None:
-        if self.file_path is None:
+        if self.file_path is None and tkinter.messagebox.askyesno('Text Editor', 'Salvare il file?') and current_text != '':
+            self.save_file()
+        else:
             return
         with open(self.file_path, 'r') as file:
             txt = file.read()
