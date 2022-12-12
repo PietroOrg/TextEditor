@@ -21,6 +21,8 @@ Install customtkinter with pip and run the program
 ```bash
   cd your-directory
   pip install customtkinter
+  pip install pillow
+  pip install pyautogui
   python3 main.py
 ```
     
