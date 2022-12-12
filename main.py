@@ -1,10 +1,8 @@
-import contextlib
 import tkinter
 import tkinter.messagebox
 import customtkinter
 import pyautogui
 import tkinter.filedialog as fd
-import tkinter.messagebox as showinfo
 from PIL import Image
 
 # Modes: 'System' (standard), 'Dark', 'Light'
