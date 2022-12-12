@@ -261,6 +261,8 @@ class App(customtkinter.CTk):
             f.close()
 
     def ask_save_file(self, *args) -> None:
+        current_text = self.main_textbox.get(0.0, 'end')
+        current_text = ''.join(current_text.split())
         if self.file_path is None and tkinter.messagebox.askyesno('Text Editor', 'Salvare il file?') and current_text != '':
             self.save_file()
         else:
@@ -268,8 +270,6 @@ class App(customtkinter.CTk):
         with open(self.file_path, 'r') as file:
             txt = file.read()
         if txt.strip() != self.main_textbox.get(0.0, 'end').strip():
-            current_text = self.main_textbox.get(0.0, 'end')
-            current_text = ''.join(current_text.split())
             if current_text != '' and tkinter.messagebox.askyesno('Text Editor', 'Salvare le modifiche del file?'):
                 self.save_file()
             self.main_textbox.delete('0.0', 'end')
