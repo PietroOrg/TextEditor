@@ -1,8 +1,10 @@
+import contextlib
 import tkinter
 import tkinter.messagebox
 import customtkinter
 import pyautogui
 import tkinter.filedialog as fd
+import tkinter.messagebox as showinfo
 from PIL import Image
 
 # Modes: 'System' (standard), 'Dark', 'Light'
@@ -20,6 +22,14 @@ class App(customtkinter.CTk):
 
     def __init__(self):
         super().__init__()
+
+        self.iconbitmap(default='images\main_icon.ico')
+        self.title('Text Editor')
+        self.geometry(f'{App.WIDTH}x{App.HEIGHT}')
+        self.minsize(App.MINWIDTH, App.MINHEIGHT)
+        # call .on_closing() when app gets closed
+        self.protocol('WM_DELETE_WINDOW', self.on_closing)
+
         self.file_path = None
         self.menu_font = ('Arial', -16)
         self.textbox_fontstyle = 'Roboto'
@@ -33,12 +43,6 @@ class App(customtkinter.CTk):
         )
         self.list_default_fontsize = [
             '8', '9', '10', '11', '12', '13', '14', '18', '24', '30', '36', '48', '72', '96']
-        self.iconbitmap(default='images\main_icon.ico')
-        self.title('Text Editor')
-        self.geometry(f'{App.WIDTH}x{App.HEIGHT}')
-        self.minsize(App.MINWIDTH, App.MINHEIGHT)
-        # call .on_closing() when app gets closed
-        self.protocol('WM_DELETE_WINDOW', self.on_closing)
 
         open_file_icon = customtkinter.CTkImage(
             dark_image=Image.open('images/open_file.png'), size=(20, 20))
@@ -71,9 +75,7 @@ class App(customtkinter.CTk):
 
         # ============ frame_left ============
 
-        # configure grid layout (9x19)
-
-        # configure empty rows and columns
+        # configure grid layout (9x19) deifining the empty spaces
         self.frame_left.grid_rowconfigure(0, weight=1)
         self.frame_left.grid_rowconfigure(2, weight=1)
         self.frame_left.grid_rowconfigure(4, weight=1)
@@ -212,30 +214,36 @@ class App(customtkinter.CTk):
         self.font_optionmenu.set('Font')
         self.theme_optionmenu.set('Tema')
 
-    # functions
+    # ============ file functions ============
+    # update the font style of the text box when the font option menu is changed
     def update_font_style(self, new_font_style: str) -> None:
         self.textbox_fontstyle = new_font_style
         self.main_textbox.configure(
             font=(self.textbox_fontstyle, self.textbox_fontsize))
 
+    # update the font size of the text box when the font size combo box is changed
     def update_font_size(self, *args) -> None:
         self.textbox_fontsize = int(self.fontsize_var.get())
         self.main_textbox.configure(
             font=(self.textbox_fontstyle, self.textbox_fontsize))
 
+    # increase the font size of the text box of 1 when the + button is pressed
     def increase_font_size(self, *args) -> None:
         self.fontsize_var.set(str(self.textbox_fontsize + 1))
         self.update_font_size()
 
+    # decrease the font size of the text box of 1 when the - button is pressed
     def decrease_font_size(self, *args) -> None:
         self.fontsize_var.set(str(self.textbox_fontsize - 1))
         self.update_font_size()
 
+    # read the text from a file
     def read_text_from_file(self, percorso: str) -> str:
         with open(percorso, 'r') as file:
             txt = file.read()
         return txt
 
+    # auto save the file when a key is pressed
     def auto_save(self, pressed_key) -> None:
         # check if pressed_key is a character
         if pressed_key.char != '':
@@ -244,6 +252,7 @@ class App(customtkinter.CTk):
                 return
             self.title(f'*{self.file_path} - Text Editor')
 
+    # saves the file
     def save_file(self, *args) -> None:
         self.title(f'{self.file_path} - Text Editor')
         if self.file_path != None:
@@ -260,21 +269,21 @@ class App(customtkinter.CTk):
             f.write(self.main_textbox.get(0.0, 'end'))
             f.close()
 
+    # ask if the user wants to save the file before opening a new one
     def ask_save_file(self, *args) -> None:
-        current_text = self.main_textbox.get(0.0, 'end')
-        current_text = ''.join(current_text.split())
-        if self.file_path is None and tkinter.messagebox.askyesno('Text Editor', 'Salvare il file?') and current_text != '':
-            self.save_file()
-        else:
+        if self.file_path is None:
             return
         with open(self.file_path, 'r') as file:
             txt = file.read()
         if txt.strip() != self.main_textbox.get(0.0, 'end').strip():
+            current_text = self.main_textbox.get(0.0, 'end')
+            current_text = ''.join(current_text.split())
             if current_text != '' and tkinter.messagebox.askyesno('Text Editor', 'Salvare le modifiche del file?'):
                 self.save_file()
             self.main_textbox.delete('0.0', 'end')
             self.file_path = None
 
+    # open a file and put its text in the text box
     def open_file(self, *args) -> None:
         self.ask_save_file()
         filename = fd.askopenfilename(
@@ -288,15 +297,21 @@ class App(customtkinter.CTk):
                 '0.0', self.read_text_from_file(self.file_path))
         self.title(f'{self.file_path} - Text Editor')
 
+    # ============ edit functions ============
+    # redo the last action
     def redo(self, *args) -> None:
         pyautogui.hotkey('ctrl', 'y')
 
+    # undo the last action
     def undo(self, *args) -> None:
         pyautogui.hotkey('ctrl', 'z')
 
+    # ============ view functions ============
+    # change the appearance mode of the app (dark or light)
     def change_appearance_mode(self, new_appearance_mode) -> None:
         customtkinter.set_appearance_mode(new_appearance_mode)
 
+    # close the app when the window is closed
     def on_closing(self, event=0) -> None:
         self.ask_save_file()
         self.destroy()
