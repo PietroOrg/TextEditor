@@ -1,10 +1,7 @@
-import contextlib
 import tkinter
-import tkinter.messagebox
 import customtkinter
 import pyautogui
-import tkinter.filedialog as fd
-import tkinter.messagebox as showinfo
+import tkinter.filedialog as filedialog
 from PIL import Image
 
 # Modes: 'System' (standard), 'Dark', 'Light'
@@ -260,7 +257,7 @@ class App(customtkinter.CTk):
                 file.truncate(0)
                 file.write(self.main_textbox.get(0.0, 'end'))
             return
-        f = fd.asksaveasfile(mode='w',
+        f = filedialog.asksaveasfile(mode='w',
                              title='Save file',
                              initialdir='/',
                              filetypes=self.filetypes,
@@ -286,7 +283,7 @@ class App(customtkinter.CTk):
     # open a file and put its text in the text box
     def open_file(self, *args) -> None:
         self.ask_save_file()
-        filename = fd.askopenfilename(
+        filename = filedialog.askopenfilename(
             title='Open a file',
             initialdir='/',
             filetypes=self.filetypes)
